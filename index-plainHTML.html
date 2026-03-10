@@ -1,49 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>Bodega - HTML Plano</title>
 </head>
-
 <body>
-  <script type="module">
-    import cBodega from "./dist/controllers/Cl_cBodega.js";
-    new cBodega();
-  </script>
 
   <section id="body">
-    <div class="container mt-5">
-      <h2>Gestión de Bodega</h2>
-
-      <button type="button" class="btn btn-primary" id="body_btNuevoArticulo">
-        Nuevo artículo
-      </button>
-
-      <hr>
-
-      <div>
-        La ganancia será de Bs. <span id="body_lblGanancia" class="fw-bold">0</span>
-      </div>
+    <h2>Gestión de Bodega (HTML Plano)</h2>
+    <button id="body_btNuevoArticulo">Nuevo artículo</button>
+    <hr>
+    <div>
+      La ganancia será de Bs. <span id="body_lblGanancia">0</span>
     </div>
   </section>
 
-  <section id="articulo" hidden>
-    <div>
-      <h5 id="articulo_lblArticulo">Procesar Artículo</h5>
-    </div>
-    <div>
-      <label>Costo:
-        <input type="number" class="form-control" id="articulo_inCosto" placeholder="Ej: 100">
-      </label>
-    </div>
-    <div>
-      <button id="articulo_btCancelar">Cancelar</button>
-      <button id="articulo_btAceptar">Aceptar</button>
-    </div>
+  <section id="articulo" hidden style="margin-top: 20px; border: 1px solid #ccc; padding: 15px; width: 300px;">
+    <h5 id="articulo_lblArticulo">Procesar Artículo</h5>
+    <label>Costo:
+      <input type="number" id="articulo_inCosto" placeholder="Ej: 100">
+    </label>
+    <br><br>
+    <button id="articulo_btCancelar">Cancelar</button>
+    <button id="articulo_btAceptar">Aceptar</button>
   </section>
 
+  <script type="module">
+    import Cl_cBodega from "./dist/controllers/Cl_cBodega.js";
+    import Cl_cArticulo from "./dist/controllers/Cl_cArticulo.js";
+    
+    // Importamos SOLO las vistas planas
+    import Cl_vBodegaPlain from "./dist/views/Cl_vBodegaPlain.js";
+    import Cl_vArticuloPlain from "./dist/views/Cl_vArticuloPlain.js";
+
+    // 1. Instanciamos las vistas
+    const vistaBodega = new Cl_vBodegaPlain();
+    const vistaArticulo = new Cl_vArticuloPlain();
+
+    // 2. Inyectamos las vistas en los controladores (¡La magia ocurre aquí!)
+    const controladorArticulo = new Cl_cArticulo(vistaArticulo);
+    new Cl_cBodega(vistaBodega, controladorArticulo);
+  </script>
 </body>
-
 </html>

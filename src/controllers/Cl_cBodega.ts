@@ -7,26 +7,30 @@
  * La ganancia será de Bs.27
  */
 
-import Cl_mArticulo from "../models/Cl_mArticulo.js";
 import Cl_mBodega from "../models/Cl_mBodega.js";
-import Cl_vBodega from "../views/Cl_vBodega.js";
+import { I_vBodega } from "../interfaces/I_vBodega.js";
 import Cl_cArticulo from "./Cl_cArticulo.js";
 
 export default class Cl_cBodega {
-  private mArticulo: Cl_mArticulo = new Cl_mArticulo();
   private mBodega: Cl_mBodega = new Cl_mBodega();
-  private vBodega: Cl_vBodega = new Cl_vBodega();
-  constructor() {
-    this.vBodega.btNuevoArticulo.onclick = () => this.procesar1Articulo();
+  private vBodega: I_vBodega;
+  private cArticulo: Cl_cArticulo;
+
+  // Recibe la vista de la bodega y el controlador del artículo ya armado
+  constructor(vistaBodega: I_vBodega, controladorArticulo: Cl_cArticulo) {
+    this.vBodega = vistaBodega;
+    this.cArticulo = controladorArticulo;
+
+    this.vBodega.onNuevoArticulo(() => this.procesar1Articulo());
+    this.vBodega.mostrar(); // Aseguramos que la vista activa se muestre
   }
-  procesar1Articulo() {
-    new Cl_cArticulo({
-      callback: (articulo) => {
-        if (articulo !== null) {
-          this.mBodega.procesarArticulo(articulo);
-          this.vBodega.reportar({ ganancia: this.mBodega.totalGanancia() });
-        }
-      },
+
+  private procesar1Articulo() {
+    this.cArticulo.solicitarArticulo((articulo) => {
+      if (articulo !== null) {
+        this.mBodega.procesarArticulo(articulo);
+        this.vBodega.reportar(this.mBodega.totalGanancia());
+      }
     });
   }
 }
